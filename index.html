@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>メール認証 - Osanpoism</title>
+    <style>
+        /* 基本的なスタイルリセット */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f9;
+        }
+
+        /* 中央のカード */
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        /* アプリ名（ロゴの代わり） */
+        .app-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #004D40; /* あなたのテーマカラー */
+            margin-bottom: 20px;
+        }
+
+        /* メッセージ表示エリア */
+        #message {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 30px;
+            min-height: 50px; /* メッセージの高さが変動してもレイアウトが崩れないように */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* アプリに戻るボタン */
+        .button {
+            display: inline-block;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background-color: #007E66; /* あなたのテーマカラー */
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #004D40;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="app-name">Osanpoism</div>
+        <div id="message">
+            <p>認証処理を実行中です...</p>
+        </div>
+        <a id="action-link" href="#" class="button">アプリに戻る</a>
+    </div>
+
+    <script>
+        // ページが読み込まれたときに実行される処理
+        window.onload = () => {
+            const messageElement = document.getElementById('message');
+            const actionLink = document.getElementById('action-link');
+            
+            // URLの#以降（フラグメント）を取得
+            const fragment = window.location.hash.substring(1);
+            const params = new URLSearchParams(fragment);
+
+            const errorDescription = params.get('error_description');
+            const accessToken = params.get('access_token');
+            const type = params.get('type');
+
+            if (errorDescription) {
+                // エラーがある場合
+                messageElement.innerHTML = `<p style="color: red;">認証に失敗しました。<br>${decodeURIComponent(errorDescription)}</p>`;
+                actionLink.textContent = '再度試す';
+                // actionLink.href = 'yourapp://retry-login'; // 必要に応じて
+            } else if (accessToken || type === 'signup') {
+                // 成功した場合（マジックリンク、パスワードリセット、または新規登録確認）
+                messageElement.innerHTML = `<p style="color: #007E66;">✅<br>メール認証が完了しました！</p><p>アプリに戻って、ログインを続けてください。</p>`;
+                actionLink.textContent = 'アプリを開く';
+                // ↓↓↓ ここにアプリを開くためのディープリンクなどを設定します ↓↓↓
+                // actionLink.href = 'yourappscheme://open'; 
+            } else {
+                // その他の場合（直接アクセスなど）
+                messageElement.innerHTML = `<p>ようこそ！<br>アプリから操作を行ってください。</p>`;
+            }
+        };
+    </script>
+
+</body>
+</html>
