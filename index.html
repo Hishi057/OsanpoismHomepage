@@ -100,7 +100,7 @@
             } else if (accessToken || type === 'signup') {
                 // 成功した場合（マジックリンク、パスワードリセット、または新規登録確認）
                 messageElement.innerHTML = `<p style="color: #007E66;">✅<br>メール認証が完了しました！</p><p>アプリに戻って、ログインを続けてください。</p>`;
-                actionLink.textContent = 'アプリを開く';
+                // actionLink.textContent = 'アプリを開く';
                 // ↓↓↓ ここにアプリを開くためのディープリンクなどを設定します ↓↓↓
                 // actionLink.href = 'yourappscheme://open'; 
             } else {
